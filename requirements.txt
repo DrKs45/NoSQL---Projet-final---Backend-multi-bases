@@ -1,0 +1,18 @@
+# Web framework
+fastapi
+uvicorn[standard]
+
+# Database - PostgreSQL (SQLAlchemy)
+sqlalchemy
+psycopg2-binary
+
+# Database - MongoDB (Motor pour l'asynchrone)
+motor
+
+# Database - Redis
+redis
+
+# Configuration & Validation
+pydantic
+pydantic-settings
+python-dotenv
