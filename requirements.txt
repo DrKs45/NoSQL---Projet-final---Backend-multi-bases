@@ -15,4 +15,5 @@ redis
 # Configuration & Validation
 pydantic
 pydantic-settings
+email-validator
 python-dotenv
