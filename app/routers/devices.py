@@ -5,6 +5,8 @@ from typing import List
 from app.db.postgres import get_db
 from app.models.device import Device as DeviceModel
 from app.schemas.device import Device, DeviceCreate, DeviceUpdate
+from app.db.mongo import log_device_event
+from app.db.redis_client import set_device_status
 
 router = APIRouter(
     prefix="/devices",
@@ -29,6 +31,10 @@ def create_device(device: DeviceCreate, db: Session = Depends(get_db)):
     db.add(db_device)
     db.commit()
     db.refresh(db_device)
+
+    log_device_event(db_device.id, "Device created", severity="INFO")
+    set_device_status(db_device.id, "online")
+
     return db_device
 
 @router.get("/{device_id}", response_model=Device)
@@ -50,6 +56,9 @@ def update_device(device_id: int, device: DeviceUpdate, db: Session = Depends(ge
     
     db.commit()
     db.refresh(db_device)
+
+    log_device_event(db_device.id, "Device updated", severity="INFO")
+
     return db_device
 
 @router.delete("/{device_id}")
@@ -60,4 +69,8 @@ def delete_device(device_id: int, db: Session = Depends(get_db)):
     
     db.delete(db_device)
     db.commit()
+
+    log_device_event(device_id, "Device deleted", severity="INFO")
+    set_device_status(db_device.id, "offline")
+
     return {"ok": True}

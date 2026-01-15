@@ -1,13 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.postgres import engine, Base
-from app.models import device, user, maintenance  # Import important pour que SQLAlchemy voit le modèle
-from app.models import mongo
-from app.routers import devices, users, maintenance as maintenance_router
-# Crée les tables dans la base de données si elles n'existent pas
-Base.metadata.create_all(bind=engine)
+from app.models import device, user, maintenance  # SQLAlchemy models
+from app.models import mongo  # pour initialiser MongoDB
+from app.routers import devices, users, maintenance as maintenance_router, status, logs
 
-# Initialise MongoDB
+# Crée les tables PostgreSQL si elles n'existent pas
+Base.metadata.create_all(bind=engine)
 
 
 app = FastAPI(title="NetOps Inventory API")
@@ -15,7 +14,7 @@ app = FastAPI(title="NetOps Inventory API")
 # Configuration CORS
 origins = [
     "http://localhost",
-    "http://localhost:5173", # Vite dev server
+    "http://localhost:5173",  # Vite dev server
 ]
 
 app.add_middleware(
@@ -26,9 +25,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Inclure tous les routers existants
 app.include_router(devices.router)
 app.include_router(users.router)
 app.include_router(maintenance_router.router)
+app.include_router(status.router)
+app.include_router(logs.router)    
 
 @app.get("/")
 def read_root():

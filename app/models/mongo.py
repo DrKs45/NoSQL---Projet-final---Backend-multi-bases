@@ -11,8 +11,9 @@ db.device_logs.create_index(
 )
 db.device_logs.create_index([("severity", ASCENDING)])
 
-db.device_configurations.create_index(
-    [("device_id_sql", ASCENDING), ("timestamp", DESCENDING)]
+db.device_configs.create_index(
+    [("device_id", ASCENDING), ("version", DESCENDING)]
 )
+
 
 print("MongoDB NetOps prêt")
