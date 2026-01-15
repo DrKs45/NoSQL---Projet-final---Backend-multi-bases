@@ -1,14 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.db.postgres import engine, Base
-<<<<<<< HEAD
-from app.models import device # Import important pour que SQLAlchemy voit le modèle
+from app.models import device, user, maintenance  # Import important pour que SQLAlchemy voit le modèle
 from app.models import mongo
-=======
-from app.models import device, user, maintenance # Import important pour que SQLAlchemy voit le modèle
 from app.routers import devices, users, maintenance as maintenance_router
-
->>>>>>> 899283c (feat: add frontend, docs and full postgre config)
 # Crée les tables dans la base de données si elles n'existent pas
 Base.metadata.create_all(bind=engine)
 
